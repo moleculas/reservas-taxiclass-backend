@@ -48,7 +48,7 @@ DB_PASSWORD=
 DB_PORT=3306
 
 # JWT
-JWT_SECRET=tu_clave_secreta_aqui_cambiar_en_produccion
+JWT_SECRET=tu_clave_secreta_aqui
 JWT_EXPIRE=3600
 
 # Entorno
@@ -56,22 +56,22 @@ APP_ENV=development
 APP_DEBUG=true
 
 # API de Auriga
-CLIENT_ID_AURIGA=51
-CLIENT_KEY_AURIGA=lP3bA6hC7yZ4cI7yW4qL8mB3hN5cX8
-API_URL_AURIGA=https://booking-api.prepro.onetaxifleet.com/api/v6/
+CLIENT_ID_AURIGA=tu_client_id
+CLIENT_KEY_AURIGA=tu_client_key
+API_URL_AURIGA=url_api_auriga
 
 # Email
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=taxiclassrent@gmail.com
-MAIL_PASSWORD=xxxx xxxx xxxx xxxx
+MAIL_USERNAME=tu_email@gmail.com
+MAIL_PASSWORD=tu_password
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=taxiclassrent@gmail.com
+MAIL_FROM_ADDRESS=tu_email@gmail.com
 MAIL_FROM_NAME=TaxiClass
-ADMIN_RESERVATION_EMAIL=reservas@taxiclassrent.com
+ADMIN_RESERVATION_EMAIL=email_admin@example.com
 
 # Google Maps (para validaciones)
-GOOGLE_MAPS_API_KEY=tu_api_key_aqui
+GOOGLE_MAPS_API_KEY=tu_api_key
 ```
 
 ## 📁 Estructura del Proyecto
