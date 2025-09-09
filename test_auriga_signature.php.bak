@@ -1,0 +1,121 @@
+<?php
+// Test de generación de firma para Auriga
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// Cargar variables de entorno
+use App\config\Environment;
+Environment::load();
+
+// Datos de prueba según el ejemplo de la documentación
+$clientId = $_ENV['CLIENT_ID_AURIGA'];
+$clientKey = $_ENV['CLIENT_KEY_AURIGA'];
+
+echo "=== TEST DE GENERACIÓN DE FIRMA AURIGA ===\n\n";
+echo "Client ID: " . $clientId . "\n";
+echo "Client Key: " . $clientKey . "\n\n";
+
+// Ejemplo de la documentación
+$testData = [
+    'bookingDate' => '2021-02-10T11:51:38+0100',
+    'clientName' => 'TEST',
+    'phoneNumber' => '955054054',
+    'pickupAddress' => [
+        'latitude' => '40.3966779',
+        'longitude' => '-3.7654382',
+        'bldgNumber' => '11',
+        'street' => 'Calle Illescas',
+        'locality' => 'MADRID',
+        'town' => 'MADRID',
+        'country' => 'Spain'
+    ],
+    'special' => 'BOOKING TEST-createBooking'
+];
+
+// Función para eliminar ceros finales
+function eliminarUltimoDigitoCero($numero) {
+    if (is_numeric($numero)) {
+        $numero = rtrim($numero, '0');
+        if (substr($numero, -1) === '.') {
+            $numero = rtrim($numero, '.');
+        }
+        return $numero;
+    }
+    return $numero;
+}
+
+// Construir string para firma
+$signatureString = $clientKey . $clientId;
+$signatureString .= $testData['bookingDate'];
+$signatureString .= $testData['clientName'];
+$signatureString .= $testData['phoneNumber'];
+$signatureString .= eliminarUltimoDigitoCero($testData['pickupAddress']['latitude']);
+$signatureString .= eliminarUltimoDigitoCero($testData['pickupAddress']['longitude']);
+$signatureString .= $testData['pickupAddress']['bldgNumber'];
+$signatureString .= $testData['pickupAddress']['street'];
+$signatureString .= $testData['pickupAddress']['locality'];
+$signatureString .= $testData['pickupAddress']['town'];
+$signatureString .= $testData['pickupAddress']['country'];
+$signatureString .= $testData['special'];
+
+echo "String a firmar:\n";
+echo "'" . $signatureString . "'\n\n";
+
+$signature = sha1($signatureString);
+echo "Firma SHA1 generada: " . $signature . "\n";
+echo "Header completo: " . $clientId . ":" . $signature . "\n\n";
+
+// Test con nuestros datos reales
+echo "=== TEST CON DATOS REALES ===\n\n";
+
+$realData = [
+    'bookingDate' => '2024-12-20T15:30:00+0100',
+    'clientName' => 'Juan Test',
+    'phoneNumber' => '666555444',
+    'pickupAddress' => [
+        'latitude' => '41.3850639',
+        'longitude' => '2.1734035',
+        'bldgNumber' => '1',
+        'street' => 'Plaza Catalunya',
+        'locality' => 'Barcelona',
+        'town' => 'Barcelona',
+        'country' => 'Spain'
+    ],
+    'destinationAddress' => [
+        'latitude' => '41.2969444',
+        'longitude' => '2.0783333',
+        'bldgNumber' => '1',
+        'street' => 'Aeropuerto',
+        'locality' => 'El Prat de Llobregat',
+        'town' => 'Barcelona',
+        'country' => 'Spain'
+    ]
+];
+
+// Construir string para firma con datos reales
+$realSignatureString = $clientKey . $clientId;
+$realSignatureString .= $realData['bookingDate'];
+$realSignatureString .= $realData['clientName'];
+$realSignatureString .= $realData['phoneNumber'];
+$realSignatureString .= eliminarUltimoDigitoCero($realData['pickupAddress']['latitude']);
+$realSignatureString .= eliminarUltimoDigitoCero($realData['pickupAddress']['longitude']);
+$realSignatureString .= $realData['pickupAddress']['bldgNumber'];
+$realSignatureString .= $realData['pickupAddress']['street'];
+$realSignatureString .= $realData['pickupAddress']['locality'];
+$realSignatureString .= $realData['pickupAddress']['town'];
+$realSignatureString .= $realData['pickupAddress']['country'];
+$realSignatureString .= eliminarUltimoDigitoCero($realData['destinationAddress']['latitude']);
+$realSignatureString .= eliminarUltimoDigitoCero($realData['destinationAddress']['longitude']);
+$realSignatureString .= $realData['destinationAddress']['bldgNumber'];
+$realSignatureString .= $realData['destinationAddress']['street'];
+$realSignatureString .= $realData['destinationAddress']['locality'];
+$realSignatureString .= $realData['destinationAddress']['town'];
+$realSignatureString .= $realData['destinationAddress']['country'];
+
+echo "String a firmar con datos reales:\n";
+echo "'" . $realSignatureString . "'\n\n";
+
+$realSignature = sha1($realSignatureString);
+echo "Firma SHA1 generada: " . $realSignature . "\n";
+echo "Header completo: " . $clientId . ":" . $realSignature . "\n";
+
+?>
